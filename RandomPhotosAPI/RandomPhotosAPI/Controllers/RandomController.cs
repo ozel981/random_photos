@@ -30,7 +30,7 @@ namespace RandomPhotosAPI.Controllers
             try
             {
                 photo = await _randomPhotoService.GetRandomPhoto();
-                _photoHistoryService.AddPhoto(photo);
+                //_photoHistoryService.AddPhoto(photo);
             } 
             catch (Exception ex)
             {
