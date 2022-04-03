@@ -13,30 +13,27 @@ namespace RandomPhotosAPI.Controllers
     [Route("[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class RandomController : Controller
+    public class HistoryController : Controller
     {
         private readonly IPhotoHistoryService _photoHistoryService;
-        private readonly IRandomPhotoService _randomPhotoService;
-        public RandomController(IPhotoHistoryService photoHistoryService, IRandomPhotoService randomPhotoService)
+        public HistoryController(IPhotoHistoryService photoHistoryService)
         {
             _photoHistoryService = photoHistoryService;
-            _randomPhotoService = randomPhotoService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            PhotoDTO photo;
+            List<PhotoDTO> photos;
             try
             {
-                photo = await _randomPhotoService.GetRandomPhoto();
-                await _photoHistoryService.AddPhoto(photo);
-            } 
+                photos = (await _photoHistoryService.GetAll()).ToList();
+            }
             catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }
-            return Ok(photo);
+            return Ok(photos);
         }
     }
 }
