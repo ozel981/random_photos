@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RandomPhotosAPI.Services;
+using RandomPhotosAPI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,9 @@ namespace RandomPhotosAPI
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddSwaggerGen();
+
+            services.AddScoped<IPhotoHistoryService, PhotoHistoryService>();
+            services.AddScoped<IRandomPhotoService, RedditRandomPhotoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
