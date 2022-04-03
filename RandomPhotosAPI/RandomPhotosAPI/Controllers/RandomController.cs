@@ -24,12 +24,12 @@ namespace RandomPhotosAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
             PhotoDTO photo;
             try
             {
-                photo = _randomPhotoService.GetRandomPhoto();
+                photo = await _randomPhotoService.GetRandomPhoto();
                 _photoHistoryService.AddPhoto(photo);
             } 
             catch (Exception ex)

@@ -18,7 +18,7 @@ namespace RandomPhotosTests.Controllers
         private readonly DateTime date = DateTime.Now;
 
         [Fact(DisplayName = "Return Ok result photo object for random request")]
-        public void GetRandom_ValidCall()
+        public async Task GetRandom_ValidCallAsync()
         {
 
             PhotoDTO photo = new PhotoDTO
@@ -31,11 +31,11 @@ namespace RandomPhotosTests.Controllers
             mockPhotoHistoryService.Setup(s => s.AddPhoto(It.IsAny<PhotoDTO>()));
 
             Mock<RedditRandomPhotoService> mockRandomPhotoService = new Mock<RedditRandomPhotoService>();
-            mockRandomPhotoService.Setup(s => s.GetRandomPhoto()).Returns(photo);
+            mockRandomPhotoService.Setup(s => s.GetRandomPhoto()).ReturnsAsync(photo);
 
             RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
 
-            var result = controller.Get();
+            var result = await controller.GetAsync();
 
             OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
             PhotoDTO resultValue = Assert.IsType<PhotoDTO>(okObjectResult.Value);
@@ -44,7 +44,7 @@ namespace RandomPhotosTests.Controllers
         }
 
         [Fact(DisplayName = "Return BadRequest error")]
-        public void GetRandom_BadRequest_Error()
+        public async Task GetRandom_BadRequest_ErrorAsync()
         {
             Mock<PhotoHistoryService> mockPhotoHistoryService = new Mock<PhotoHistoryService>();
             mockPhotoHistoryService.Setup(s => s.AddPhoto(It.IsAny<PhotoDTO>()));
@@ -54,7 +54,7 @@ namespace RandomPhotosTests.Controllers
 
             RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
 
-            var result = controller.Get();
+            var result = await controller.GetAsync();
 
             ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(400, objectResult.StatusCode);
