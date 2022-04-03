@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomPhotosAPI", "RandomPhotosAPI\RandomPhotosAPI.csproj", "{A29545A3-F7AB-4E9E-911C-F78F151F7466}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomPhotosTests", "RandomPhotosTests\RandomPhotosTests.csproj", "{D4E1DB91-05B1-43E3-A2BE-18C3ED57F562}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A29545A3-F7AB-4E9E-911C-F78F151F7466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A29545A3-F7AB-4E9E-911C-F78F151F7466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A29545A3-F7AB-4E9E-911C-F78F151F7466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E1DB91-05B1-43E3-A2BE-18C3ED57F562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E1DB91-05B1-43E3-A2BE-18C3ED57F562}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E1DB91-05B1-43E3-A2BE-18C3ED57F562}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E1DB91-05B1-43E3-A2BE-18C3ED57F562}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
