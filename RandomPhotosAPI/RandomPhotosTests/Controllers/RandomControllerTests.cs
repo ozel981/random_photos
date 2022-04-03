@@ -37,7 +37,27 @@ namespace RandomPhotosTests.Controllers
 
             var result = controller.Get();
 
-            Assert.IsType<OkObjectResult>(result);
+            OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
+            PhotoDTO resultValue = Assert.IsType<PhotoDTO>(okObjectResult.Value);
+            Assert.Equal(((PhotoDTO)resultValue).Url, url);
+            Assert.True(((PhotoDTO)resultValue).DownloadDate.Equals(date));
+        }
+
+        [Fact(DisplayName = "Return BadRequest error")]
+        public void GetRandom_BadRequest_Error()
+        {
+            Mock<PhotoHistoryService> mockPhotoHistoryService = new Mock<PhotoHistoryService>();
+            mockPhotoHistoryService.Setup(s => s.AddPhoto(It.IsAny<PhotoDTO>()));
+
+            Mock<RedditRandomPhotoService> mockRandomPhotoService = new Mock<RedditRandomPhotoService>();
+            mockRandomPhotoService.Setup(s => s.GetRandomPhoto()).Throws(new Exception());
+
+            RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
+
+            var result = controller.Get();
+
+            ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(400, objectResult.StatusCode);
         }
     }
 }

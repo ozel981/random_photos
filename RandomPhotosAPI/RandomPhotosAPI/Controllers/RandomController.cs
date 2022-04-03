@@ -5,6 +5,7 @@ using RandomPhotosAPI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace RandomPhotosAPI.Controllers
@@ -25,7 +26,17 @@ namespace RandomPhotosAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new PhotoDTO { Url = "https://tiny.pl/9kszp", DownloadDate = DateTime.Now });
+            PhotoDTO photo;
+            try
+            {
+                photo = _randomPhotoService.GetRandomPhoto();
+                _photoHistoryService.AddPhoto(photo);
+            } 
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+            }
+            return Ok(photo);
         }
     }
 }
