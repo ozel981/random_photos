@@ -7,7 +7,6 @@ namespace RandomPhotosAPI.Database
     public class RandomPhotosDBContext : DbContext
     {
         public RandomPhotosDBContext(DbContextOptions<RandomPhotosDBContext> options) : base(options) { }
-        public RandomPhotosDBContext() : base() { }
         public DbSet<Photo> Photos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
