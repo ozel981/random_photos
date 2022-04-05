@@ -2,7 +2,7 @@
 
 ## Opis
 
-Aplikacji typu JSON API do pobierania losowych zdjęć z serwisu internetowego Reddit. API posiada 2 endpointy:
+Aplikacja typu JSON API do pobierania losowych zdjęć z serwisu internetowego Reddit. API posiada 2 endpointy:
 1. `/random` - pobiera losowy obrazek z Reddita dla zadanego subreddita
 2. `/history` - pobiera historię wylosowanych obrazków.
 \newline
@@ -16,9 +16,12 @@ Zdjęcia zwracane są w postaci JSON: <br />
 ## Uruchomienie
 
 W celu uruchomienia aplikacji najpierw nalerzy stworzyć i połączyć się z bazą danych. <br />
-W pliku appsettings.json trzeba podać poprawny DBConnection string.
-Następnie nalerzy uruchomić polecenie Update-Database przy pomocy Package Manager Console.
-Kiedy zostanie stworzona baza danych można uruchomić aplikację.
+Na systemie powinny być zainstalowane narzędzie Entity Framework Core. <br />
+Na systemie powinien istnieć rownież serwer. <br />
+W pliku appsettings.json trzeba podać poprawny DBConnection string. <br />
+Następnie wykorzystjąca narzędia EF Core nalerzy uaktualnić bazę danych. <br />
+`dotnet ef database update` (https://docs.microsoft.com/pl-pl/ef/core/cli/dotnet?fbclid) <br />
+Po stworzeniu bazy danych można uruchomić aplikację.
 
 ## Autor
 
