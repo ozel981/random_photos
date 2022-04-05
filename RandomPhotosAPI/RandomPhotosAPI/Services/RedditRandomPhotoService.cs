@@ -15,12 +15,10 @@ namespace RandomPhotosAPI.Services
         Random random;
         HttpClient client;
         HttpContent content;
-        string clientId = "I3-8TcfpMo0Gts30MV3juw";
-        string secretKey = "jE6GBN74IYpDsKyOBQ3bZMRz8sKPxw";
-        string subreddit = "meme";
-        string redditAccessTokenUriStr = "https://www.reddit.com/api/v1/access_token";
-        public RedditRandomPhotoService()
+        RedditConnectionData _connectionData;
+        public RedditRandomPhotoService(RedditConnectionData connectionData)
         {
+            _connectionData = connectionData;
             random = new Random();
             client = new HttpClient();
             Uri baseUri = new Uri("https://www.reddit.com");
@@ -29,8 +27,8 @@ namespace RandomPhotosAPI.Services
             client.DefaultRequestHeaders.ConnectionClose = true;
             var values = new List<KeyValuePair<string, string>>();
             values.Add(new KeyValuePair<string, string>("grant_type", "password"));
-            values.Add(new KeyValuePair<string, string>("username", "Longjumping_Song7753"));
-            values.Add(new KeyValuePair<string, string>("password", "Qwerty13579"));
+            values.Add(new KeyValuePair<string, string>("username", _connectionData.UserName));
+            values.Add(new KeyValuePair<string, string>("password", _connectionData.Password));
             content = new FormUrlEncodedContent(values);
         }
         public async virtual Task<PhotoDTO> GetRandomPhoto()
@@ -45,10 +43,10 @@ namespace RandomPhotosAPI.Services
         }
         private string GetRedditAccessToken()
         {
-            var authenticationString = $"{clientId}:{secretKey}";
+            var authenticationString = $"{ _connectionData.ClientID}:{_connectionData.SecretKey}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, redditAccessTokenUriStr);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, _connectionData.RedditAccessTokenUriStr);
             requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
             requestMessage.Content = content;
 
@@ -62,10 +60,7 @@ namespace RandomPhotosAPI.Services
         private async Task<string> GetRandomPhotoFromReddit()
         {
             string accessToken = GetRedditAccessToken();
-            var option = new RestClientOptions($"https://oauth.reddit.com/r/{subreddit}/hot")
-            {
-                Timeout = -1
-            };
+            var option = new RestClientOptions($"https://oauth.reddit.com/r/{_connectionData.Subreddit}/hot");
             var client = new RestClient(option);
             var request = new RestRequest();
             request.AddHeader("Authorization", $"Bearer {accessToken}");
@@ -83,6 +78,17 @@ namespace RandomPhotosAPI.Services
             return photoUrls[random.Next(0, photoUrls.Count - 1)];
         }
     }
+
+    public class RedditConnectionData
+    {
+        public string ClientID { get; set; } 
+        public string SecretKey { get; set; }
+        public string Subreddit { get; set; }
+        public string RedditAccessTokenUriStr { get; set; } 
+        public string UserName { get; set; } 
+        public string Password { get; set; } 
+    }
+
 
     [Serializable]
     class Subreddit

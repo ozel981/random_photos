@@ -32,9 +32,19 @@ namespace RandomPhotosAPI
             services.AddSwaggerGen();
 
             services.AddScoped<IPhotoHistoryService, PhotoHistoryService>();
-            services.AddScoped<IRandomPhotoService, RedditRandomPhotoService>();
+            services.AddSingleton<IRandomPhotoService>(t =>
+                    new RedditRandomPhotoService(new RedditConnectionData
+                    {
+                        ClientID = Configuration.GetValue<string>("AppIdentitySettings:RedditAPIClientID"),
+                        SecretKey = Configuration.GetValue<string>("AppIdentitySettings:RedditAPISecretKey"),
+                        UserName = Configuration.GetValue<string>("AppIdentitySettings:RedditUserName"),
+                        Password = Configuration.GetValue<string>("AppIdentitySettings:RedditPassword"),
+                        RedditAccessTokenUriStr = Configuration.GetValue<string>("RedditAccessTokenUrl"),
+                        Subreddit = Configuration.GetValue<string>("RedditSubreddit")
+                    }));
 
-            services.AddDbContext<RandomPhotosDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            services.AddDbContext<RandomPhotosDBContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
