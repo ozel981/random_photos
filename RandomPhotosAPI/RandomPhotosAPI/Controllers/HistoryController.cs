@@ -27,7 +27,7 @@ namespace RandomPhotosAPI.Controllers
             List<PhotoDTO> photos;
             try
             {
-                photos = (await _photoHistoryService.GetAll()).ToList();
+                photos = (await _photoHistoryService.GetAllAsync()).ToList();
             }
             catch (Exception ex)
             {

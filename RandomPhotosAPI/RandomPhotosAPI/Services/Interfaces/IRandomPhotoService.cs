@@ -8,6 +8,6 @@ namespace RandomPhotosAPI.Services.Interfaces
 {
     public interface IRandomPhotoService
     {
-        public Task<PhotoDTO> GetRandomPhoto();
+        public Task<PhotoDTO> GetRandomPhotoAsync();
     }
 }

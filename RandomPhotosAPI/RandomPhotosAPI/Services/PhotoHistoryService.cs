@@ -15,7 +15,7 @@ namespace RandomPhotosAPI.Services
         {
             _randomPhotosDBContext = randomPhotosDBContext;
         }
-        public async virtual Task AddPhoto(PhotoDTO photo)
+        public async virtual Task AddPhotoAsync(PhotoDTO photo)
         {
             Database.DatabaseModels.Photo photoDB = new Database.DatabaseModels.Photo
             {
@@ -26,7 +26,7 @@ namespace RandomPhotosAPI.Services
             await _randomPhotosDBContext.SaveChangesAsync();
         }
 
-        public async virtual Task<IEnumerable<PhotoDTO>> GetAll()
+        public async virtual Task<IEnumerable<PhotoDTO>> GetAllAsync()
         {
             return (await _randomPhotosDBContext.Photos.ToListAsync()).ConvertAll<PhotoDTO>(photo => new PhotoDTO
             {

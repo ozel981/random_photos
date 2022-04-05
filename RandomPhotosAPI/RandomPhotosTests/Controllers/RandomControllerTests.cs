@@ -3,6 +3,7 @@ using Moq;
 using RandomPhotosAPI.Controllers;
 using RandomPhotosAPI.ModelsDTO;
 using RandomPhotosAPI.Services;
+using RandomPhotosAPI.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,45 +15,77 @@ namespace RandomPhotosTests.Controllers
         private const string url = "https://test.jpg";
         private readonly DateTime date = DateTime.Now;
 
-        [Fact(DisplayName = "Return Ok result photo object for random request")]
+        [Fact(DisplayName = "Return Ok result for random request")]
         public async Task GetRandom_ValidCallAsync()
         {
-
+            // arrange
             PhotoDTO photo = new PhotoDTO
             {
                 Url = url,
                 DownloadDate = date
             };
 
-            Mock<PhotoHistoryService> mockPhotoHistoryService = new Mock<PhotoHistoryService>();
-            mockPhotoHistoryService.Setup(s => s.AddPhoto(It.IsAny<PhotoDTO>()));
+            Mock <IPhotoHistoryService> mockPhotoHistoryService = new Mock<IPhotoHistoryService>();
+            mockPhotoHistoryService.Setup(s => s.AddPhotoAsync(It.IsAny<PhotoDTO>()));
 
-            Mock<RedditRandomPhotoService> mockRandomPhotoService = new Mock<RedditRandomPhotoService>();
-            mockRandomPhotoService.Setup(s => s.GetRandomPhoto()).ReturnsAsync(photo);
+            Mock<IRandomPhotoService> mockRandomPhotoService = new Mock<IRandomPhotoService>();
+            mockRandomPhotoService.Setup(s => s.GetRandomPhotoAsync()).ReturnsAsync(photo);
 
             RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
 
+            // act
             var result = await controller.GetAsync();
 
+            //assert
             OkObjectResult okObjectResult = Assert.IsType<OkObjectResult>(result);
             PhotoDTO resultValue = Assert.IsType<PhotoDTO>(okObjectResult.Value);
-            Assert.Equal(((PhotoDTO)resultValue).Url, url);
-            Assert.True(((PhotoDTO)resultValue).DownloadDate.Equals(date));
+            Assert.Equal((resultValue).Url, url);
+            Assert.True((resultValue).DownloadDate.Equals(date));
+            mockPhotoHistoryService.Verify(m => m.AddPhotoAsync(It.IsAny<PhotoDTO>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Return BadRequest error")]
-        public async Task GetRandom_BadRequest_ErrorAsync()
+        [Fact(DisplayName = "Return BadRequest on get random photo error")]
+        public async Task GetRandom_BadRequest_GetRandomPhotoErrorAsync()
         {
-            Mock<PhotoHistoryService> mockPhotoHistoryService = new Mock<PhotoHistoryService>();
-            mockPhotoHistoryService.Setup(s => s.AddPhoto(It.IsAny<PhotoDTO>()));
+            // arrange
+            Mock<IPhotoHistoryService> mockPhotoHistoryService = new Mock<IPhotoHistoryService>();
+            mockPhotoHistoryService.Setup(s => s.AddPhotoAsync(It.IsAny<PhotoDTO>()));
 
-            Mock<RedditRandomPhotoService> mockRandomPhotoService = new Mock<RedditRandomPhotoService>();
-            mockRandomPhotoService.Setup(s => s.GetRandomPhoto()).Throws(new Exception());
+            Mock<IRandomPhotoService> mockRandomPhotoService = new Mock<IRandomPhotoService>();
+            mockRandomPhotoService.Setup(s => s.GetRandomPhotoAsync()).Throws(new Exception());
 
             RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
 
+            // act
             var result = await controller.GetAsync();
 
+            // assety
+            ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(400, objectResult.StatusCode);
+        }
+
+        [Fact(DisplayName = "Return BadRequest on add photo error")]
+        public async Task GetRandom_BadRequest_ErrorAsync()
+        {
+            // arrange
+            PhotoDTO photo = new PhotoDTO
+            {
+                Url = url,
+                DownloadDate = date
+            };
+
+            Mock<IPhotoHistoryService> mockPhotoHistoryService = new Mock<IPhotoHistoryService>();
+            mockPhotoHistoryService.Setup(s => s.AddPhotoAsync(It.IsAny<PhotoDTO>())).Throws(new Exception());
+
+            Mock<IRandomPhotoService> mockRandomPhotoService = new Mock<IRandomPhotoService>();
+            mockRandomPhotoService.Setup(s => s.GetRandomPhotoAsync()).ReturnsAsync(photo);
+
+            RandomController controller = new RandomController(mockPhotoHistoryService.Object, mockRandomPhotoService.Object);
+
+            // act
+            var result = await controller.GetAsync();
+
+            // assety
             ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(400, objectResult.StatusCode);
         }

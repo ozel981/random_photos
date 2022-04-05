@@ -29,8 +29,8 @@ namespace RandomPhotosAPI.Controllers
             PhotoDTO photo;
             try
             {
-                photo = await _randomPhotoService.GetRandomPhoto();
-                await _photoHistoryService.AddPhoto(photo);
+                photo = await _randomPhotoService.GetRandomPhotoAsync();
+                await _photoHistoryService.AddPhotoAsync(photo);
             } 
             catch (Exception ex)
             {

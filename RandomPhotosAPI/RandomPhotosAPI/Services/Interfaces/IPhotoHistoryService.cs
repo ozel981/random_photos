@@ -8,7 +8,7 @@ namespace RandomPhotosAPI.Services.Interfaces
 {
     public interface IPhotoHistoryService
     {
-        public Task<IEnumerable<PhotoDTO>> GetAll();
-        public Task AddPhoto(PhotoDTO photo);
+        public Task<IEnumerable<PhotoDTO>> GetAllAsync();
+        public Task AddPhotoAsync(PhotoDTO photo);
     }
 }
