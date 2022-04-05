@@ -22,6 +22,7 @@ W pliku appsettings.json trzeba podać poprawny DBConnection string. <br />
 Następnie wykorzystująca narzędzia EF Core należy uaktualnić bazę danych. <br />
 `dotnet ef database update` (https://docs.microsoft.com/pl-pl/ef/core/cli/dotnet?fbclid) <br />
 Po stworzeniu bazy danych można uruchomić aplikację. <br />
+`dotnet run`
 
 ## Autor
 
