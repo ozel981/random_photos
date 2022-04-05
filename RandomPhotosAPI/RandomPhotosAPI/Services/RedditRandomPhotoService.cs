@@ -82,13 +82,13 @@ namespace RandomPhotosAPI.Services
 
             // get result
             string output = response.Content;
-            var obiekt = JsonConvert.DeserializeObject<Subreddit>(output);
+            var responseObject = JsonConvert.DeserializeObject<Subreddit>(output);
 
             // filter photos
             List<string> photoUrls = new List<string>();
-            foreach (var children in obiekt.Data.Children)
+            foreach (var children in responseObject.Data.Children)
             {
-                if (children.Data.Url.Contains(".png") || children.Data.Url.Contains(".jpg"))
+                if (children.Data.Url.EndsWith(".png") || children.Data.Url.EndsWith(".jpg"))
                 {
                     photoUrls.Add(children.Data.Url);
                 }
